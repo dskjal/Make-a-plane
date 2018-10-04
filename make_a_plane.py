@@ -21,7 +21,7 @@ bl_info = {
     "name" : "Make a plane",
     "author" : "dskjal",
     "version" : (1, 0),
-    "blender" : (2, 79, ),
+    "blender" : (2, 79, 0),
     "location" : "View3D > Toolshelf > Make a plane",
     "description" : "Make a plane, moving a vertex in normal direction.",
     "warning" : "",
@@ -40,13 +40,8 @@ class MakeAPlaneButton(bpy.types.Operator):
             raise TypeError('This addon workd in Edit mode on a mesh.')
             
         bm = bmesh.from_edit_mesh(o.data)
-        if len(bm.select_history) != 4:
-            raise Exception('Select 4 vertices.')
-
-        #line position, line normal
-        last = bm.verts[bm.select_history[3].index]
-        lp = last.co
-        ln = last.normal
+        if len(bm.select_history) < 4:
+            raise Exception('Select 4 or more vertices.')
 
         # plane vertices, plane normal
         p1 = bm.verts[bm.select_history[0].index].co
@@ -54,7 +49,11 @@ class MakeAPlaneButton(bpy.types.Operator):
         p3 = bm.verts[bm.select_history[2].index].co
         pn = (p1-p2).cross(p3-p1)
 
-        last.co = lp - ln * ( (pn.dot(lp - p1))/pn.dot(ln) )
+        for i in range(3, len(bm.select_history)):
+            vert = bm.verts[bm.select_history[i].index]
+            lp = vert.co
+            ln = vert.normal
+            vert.co = lp - ln * ( (pn.dot(lp - p1))/pn.dot(ln) )
 
         bmesh.update_edit_mesh(o.data)
         
