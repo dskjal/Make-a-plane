@@ -21,7 +21,7 @@ bl_info = {
     "name" : "Make a plane",
     "author" : "dskjal",
     "version" : (1, 0),
-    "blender" : (2, 79, 5),
+    "blender" : (2, 79, ),
     "location" : "View3D > Toolshelf > Make a plane",
     "description" : "Make a plane, moving a vertex in normal direction.",
     "warning" : "",
