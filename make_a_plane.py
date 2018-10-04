@@ -35,7 +35,7 @@ class MakeAPlaneButton(bpy.types.Operator):
     bl_label = "Make a plane"
     
     def execute(self, context):
-        o = bpy.context.scene.objects.active
+        o = bpy.context.object
         if o.type != 'MESH' or o.mode != 'EDIT':
             raise TypeError('This addon workd in Edit mode on a mesh.')
             
@@ -67,7 +67,7 @@ class UI(bpy.types.Panel):
     
     @classmethod
     def poll(self, context):
-        o = context.active_object
+        o = context.object
         return o and o.type == 'MESH' and o.mode == 'EDIT'
     
     def draw(self, context):
